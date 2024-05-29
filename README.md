@@ -4,7 +4,7 @@
 
 The `MyAllowance` smart contract is a custom ERC20 token designed for a gamified platform where tokens can be minted, transferred, redeemed, and burned. The owner has exclusive rights to mint new tokens, while players can manage their tokens in various ways.
 
-#cFunctions
+# Functions
 
 Minting New Tokens (`mintAllowance`)
  Description: The owner can mint new tokens and distribute them to players.
