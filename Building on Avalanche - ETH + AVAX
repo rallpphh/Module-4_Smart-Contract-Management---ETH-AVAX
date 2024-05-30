@@ -1,11 +1,4 @@
 // SPDX-License-Identifier: MIT
-/*
-1. Minting new tokens: The platform should be able to create new tokens and distribute them to players as rewards. Only the owner can mint tokens.
-2. Transferring tokens: Players should be able to transfer their tokens to others.
-3. Redeeming tokens: Players should be able to redeem their tokens for items in the in-game store.
-4. Checking token balance: Players should be able to check their token balance at any time.
-5. Burning tokens: Anyone should be able to burn tokens, that they own, that are no longer needed.
-*/
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -20,29 +13,29 @@ contract MyAllowance is ERC20, Ownable {
         Allowance[2] = 400; // day2
         Allowance[3] = 300; // day3
     }
-
+        //Minting new tokens: The platform should be able to create new tokens and distribute them to players as rewards. Only the owner can mint tokens.
     function mintAllowance(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
     }
-
+        //Transferring tokens: Players should be able to transfer their tokens to others.
     function transferAllwowance(address _to, uint256 _amount) public {
         require(balanceOf(msg.sender) >= _amount, "Transfer Failed: Insufficient balance.");
         approve(msg.sender, _amount);
         transferFrom(msg.sender, _to, _amount);
     }
-
+        //Redeeming tokens: Players should be able to redeem their tokens for allowance.
     function AllowancePerDay() external pure returns (string memory) {
         string memory saleOptions = "Allowance: {1} day (500) {2} day (400) {3} day (300)";
         return saleOptions;
     }
-
+        //Checking token balance: Players should be able to check their token balance at any time.
     function redeemAllowance(uint256 _amount) public {
         require(Allowance[_amount] > 0, "Allowance is not enough");
         require(_amount <= 3, "Allowance is not enough.");
         require(balanceOf(msg.sender) >= Allowance[_amount], "Redeem Failed: Insufficient balance.");
         transfer(owner(), Allowance[_amount]);
     }
-    
+        //Burning tokens: Anyone should be able to burn tokens, that they own, that are no longer needed.
     function burnAllowance(uint256 _amount) public {
         require(balanceOf(msg.sender) >= _amount, "Burn Failed: Insufficient balance.");
         approve(msg.sender, _amount);
