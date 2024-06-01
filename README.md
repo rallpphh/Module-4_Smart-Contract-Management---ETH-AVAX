@@ -1,63 +1,28 @@
-# MyAllowance Smart Contract
+# MyAllowance Contract
 
 # Overview
-
-The `MyAllowance` smart contract is a custom ERC20 token designed for a gamified platform where tokens can be minted, transferred, redeemed, and burned. The owner has exclusive rights to mint new tokens, while players can manage their tokens in various ways.
+MyAllowance is a Solidity smart contract that allows users to manage and redeem their daily allowance tokens. It is built on top of the ERC20 standard and utilizes the Ownable contract from OpenZeppelin for access control.
 
 # Functions
+### mintAllowance: Allows the owner to mint new tokens and distribute them to players as rewards.
+### transferAllowance: Enables players to transfer their tokens to other addresses.
+### redeemAllowance: Allows players to redeem their tokens for daily allowance.
+### burnAllowance: Allows anyone to burn their own tokens.
+### getBalance: Allows players to check their token balance, including redeemed allowance.
+### AllowancePerDay: Returns the allowance options per day.
 
-Minting New Tokens (`mintAllowance`)
- Description: The owner can mint new tokens and distribute them to players.
- Usage: `mintAllowance(address _to, uint256 _amount)`
+## Usage in Remix IDE
+1. Copy the contract code into the Remix IDE.
+2. Compile the contract using a Solidity compiler version compatible with ^0.8.20.
+3. Deploy the contract, specifying the token name and symbol.
+4. Interact with the deployed contract using the provided functions.
 
-Transferring Tokens (`transferAllowance`)
- Description: Players can transfer their tokens to others.
- Usage: `transferAllowance(address _to, uint256 _amount)`
-
-Redeeming Tokens (`redeemAllowance`)
- Description: Players can redeem their tokens for items in the in-game store.
- Usage: `redeemAllowance(uint256 _amount)`
-
-Checking Token Balance (`getBalance`)
- Description: Players can check their token balance at any time.
- Usage: `getBalance()`
-
-Burning Tokens (`burnAllowance`)
- Description: Players can burn tokens they own that are no longer needed.
- Usage: `burnAllowance(uint256 _amount)`
-
-Allowance Per Day (`AllowancePerDay`)
- Description: View the allowance distribution per day.
- Usage: `AllowancePerDay()`
-
-# Usage in Remix IDE
-
-To deploy and interact with the `MyAllowance` contract in Remix IDE:
-
-Open Remix IDE
- Navigate to [Remix IDE](https://remix.ethereum.org/).
-
-Create a New File
- Create a new Solidity file (e.g., `MyAllowance.sol`) and paste the contract code into this file.
-
-Compile the Contract
- Select the appropriate compiler version (e.g., `0.8.20`).
- Click on the "Compile" button to compile the contract.
-
-Deploy the Contract
- Go to the "Deploy & Run Transactions" tab.
- Select the `MyAllowance` contract from the dropdown menu.
- Click on the "Deploy" button.
- Ensure you have selected an appropriate environment (e.g., JavaScript VM, Injected Web3) and have sufficient funds in the selected account.
-
-Interact with the Contract
- Once deployed, you can interact with the contract's functions through the Remix interface.
- Use the input fields and buttons corresponding to each function to mint, transfer, redeem, check balance, and burn tokens.
-
-# Owner
-
+## Owner
 Ralph Lauren Bensurto
 
-# License
+## License
+MIT License
 
-This project is licensed under the MIT License. See the SPDX-License-Identifier in the contract code for more details.
+## SPDX-License-Identifier
+MIT
+
