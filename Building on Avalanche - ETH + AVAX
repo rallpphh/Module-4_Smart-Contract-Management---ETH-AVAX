@@ -7,46 +7,62 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract MyAllowance is ERC20, Ownable {
 
     mapping(uint256 => uint256) public Allowance;
+    mapping(address => mapping(uint256 => uint256)) public redeemedItems;
+
+    event AllowanceRedeemed(address indexed user, uint256 day, uint256 amount);
 
     constructor() ERC20("ALLOWANCE", "DAILY") Ownable(msg.sender) {
         Allowance[1] = 500; // day1
         Allowance[2] = 400; // day2
         Allowance[3] = 300; // day3
     }
-        //Minting new tokens: The platform should be able to create new tokens and distribute them to players as rewards. Only the owner can mint tokens.
+
+    // Minting new tokens: The platform should be able to create new tokens and distribute them to players as rewards. Only the owner can mint tokens.
     function mintAllowance(address _to, uint256 _amount) public onlyOwner {
         _mint(_to, _amount);
     }
-        //Transferring tokens: Players should be able to transfer their tokens to others.
-    function transferAllwowance(address _to, uint256 _amount) public {
+
+    // Transferring tokens: Players should be able to transfer their tokens to others.
+    function transferAllowance(address _to, uint256 _amount) public {
         require(balanceOf(msg.sender) >= _amount, "Transfer Failed: Insufficient balance.");
-        approve(msg.sender, _amount);
-        transferFrom(msg.sender, _to, _amount);
+        _transfer(msg.sender, _to, _amount);
     }
-        //Redeeming tokens: Players should be able to redeem their tokens for allowance.
-    function AllowancePerDay() external pure returns (string memory) {
-        string memory saleOptions = "Allowance: {1} day (500) {2} day (400) {3} day (300)";
-        return saleOptions;
+
+    // Redeeming tokens: Players should be able to redeem their tokens for allowance.
+    function redeemAllowance(uint256 _day) public {
+        require(_day >= 1 && _day <= 3, "Invalid day.");
+        uint256 amount = Allowance[_day];
+        require(amount > 0, "Allowance is not enough.");
+        require(balanceOf(msg.sender) >= amount, "Redeem Failed: Insufficient balance.");
+        _burn(msg.sender, amount); // Burn tokens from the user
+        _mint(owner(), amount); // Mint tokens to owner
+        redeemedItems[msg.sender][_day] = amount;
+        emit AllowanceRedeemed(msg.sender, _day, amount);
     }
-        //Checking token balance: Players should be able to check their token balance at any time.
-    function redeemAllowance(uint256 _amount) public {
-        require(Allowance[_amount] > 0, "Allowance is not enough");
-        require(_amount <= 3, "Allowance is not enough.");
-        require(balanceOf(msg.sender) >= Allowance[_amount], "Redeem Failed: Insufficient balance.");
-        transfer(owner(), Allowance[_amount]);
-    }
-        //Burning tokens: Anyone should be able to burn tokens, that they own, that are no longer needed.
+
+    // Burning tokens: Anyone should be able to burn tokens, that they own, that are no longer needed.
     function burnAllowance(uint256 _amount) public {
         require(balanceOf(msg.sender) >= _amount, "Burn Failed: Insufficient balance.");
-        approve(msg.sender, _amount);
         _burn(msg.sender, _amount);
     }
 
+    // Checking token balance: Players should be able to check their token balance at any time.
     function getBalance() external view returns (uint256) {
-        return this.balanceOf(msg.sender);
+        uint256 balance = balanceOf(msg.sender);
+        for (uint256 i = 1; i <= 3; i++) {
+            balance += redeemedItems[msg.sender][i];
+        }
+        return balance;
     }
 
-    function decimals() override public pure returns (uint8) {
+    // Allowance per day
+    function AllowancePerDay() external pure returns (string memory) {
+        string memory saleOptions = "Allowance: 1 day (500), 2 days (400), 3 days (300)";
+        return saleOptions;
+    }
+
+    // Override the decimals function to return 0
+    function decimals() public pure override returns (uint8) {
         return 0;
     }
 }
