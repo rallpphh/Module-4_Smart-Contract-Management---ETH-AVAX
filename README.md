@@ -1,34 +1,32 @@
-# MyAllowance Contract
+# MyToken Contract
 
 # Overview
-MyAllowance is a Solidity smart contract that allows users to manage and redeem their daily allowance tokens. It is built on top of the ERC20 standard and utilizes the Ownable contract from OpenZeppelin for access control.
+MyToken is a Solidity smart contract based on the ERC20 standard and utilizes the Ownable contract from OpenZeppelin for access control. It allows users to manage and redeem tokens for daily allowance and also includes functionality for minting, transferring, burning tokens, and managing redeemable items.
 
 # Functions
 
- **mintAllowance**: Allows the owner to mint new tokens and distribute them to players as rewards.
+- **mint**: Allows the owner to mint new tokens and distribute them.
+- **transfer**: Enables users to transfer tokens to other addresses.
+- **redeemItem**: Allows users to redeem tokens for items.
+- **burn**: Allows users to burn their own tokens.
+- **totalSupply**: Returns the total supply of tokens.
+- **balanceOf**: Returns the balance of tokens for a specific account.
+- **allowance**: Returns the amount of tokens that an owner has approved for a spender.
+- **approve**: Allows the owner to approve the transfer of tokens from their account to another.
+- **transferFrom**: Allows approved spenders to transfer tokens on behalf of the owner.
+- **isItemAvailable**: Checks if a specific item is available for redemption or purchase.
 
-**transferAllowance**: Enables players to transfer their tokens to other addresses.
-
-**redeemAllowance**: Allows players to redeem their tokens for daily allowance.
-
-**burnAllowance**: Allows anyone to burn their own tokens.
-
-**getBalance**: Allows players to check their token balance, including redeemed allowance.
-
-**AllowancePerDay**: Returns the allowance options per day.
-
-## Usage in Remix IDE
+# Usage in Remix IDE
 1. Copy the contract code into the Remix IDE.
 2. Compile the contract using a Solidity compiler version compatible with ^0.8.20.
-3. Deploy the contract, specifying the token name and symbol.
+3. Deploy the contract, specifying the token name, symbol, decimals, initial supply, and initial owner.
 4. Interact with the deployed contract using the provided functions.
 
-## Owner
+# Owner
 Ralph Lauren Bensurto
 
-## License
+# License
 MIT License
 
-## SPDX-License-Identifier
+# SPDX-License-Identifier
 MIT
-
