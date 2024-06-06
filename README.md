@@ -27,6 +27,3 @@ Ralph Lauren Bensurto
 
 # License
 MIT License
-
-## SPDX-License-Identifier
-MIT
