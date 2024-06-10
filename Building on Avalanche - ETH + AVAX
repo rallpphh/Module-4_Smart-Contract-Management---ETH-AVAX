@@ -45,9 +45,9 @@ contract RalphGamingToken is IERC20, Ownable {
         emit Transfer(address(0), msg.sender, _totalSupply);
 
         // Initialize predefined BundleDiamonds
-        bundleDiamonds.push(BundleDiamond({ name: "Sword of Valor", price: 9000, available: true }));
-        bundleDiamonds.push(BundleDiamond({ name: "Shield of Courage", price: 6000, available: true }));
-        bundleDiamonds.push(BundleDiamond({ name: "Potion of Strength", price: 4000, available: true }));
+        bundleDiamonds.push(BundleDiamond({ name: "Ragnarok M", price: 9000, available: true }));
+        bundleDiamonds.push(BundleDiamond({ name: "PUBG", price: 6000, available: true }));
+        bundleDiamonds.push(BundleDiamond({ name: "Clash Of Clan", price: 4000, available: true }));
     }
 
     function totalSupply() public view override returns (uint256) {
