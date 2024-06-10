@@ -1,7 +1,7 @@
 # RalphGamingToken Contract
 
 # Overview
-DegenGamingToken is a Solidity smart contract based on the ERC20 standard and utilizes the Ownable contract from OpenZeppelin for access control. It allows users to manage and redeem tokens for games and also includes functionality for minting, transferring, and burning tokens.
+RalphGamingToken is a Solidity smart contract based on the ERC20 standard and utilizes the Ownable contract from OpenZeppelin for access control. It allows users to manage and redeem tokens for games and also includes functionality for minting, transferring, and burning tokens.
 
 # Functions
 - totalSupply: Returns the total supply of tokens.
@@ -12,9 +12,9 @@ DegenGamingToken is a Solidity smart contract based on the ERC20 standard and ut
 - transferFrom: Allows approved spenders to transfer tokens on behalf of the owner.
 - mint: Allows the owner to mint new tokens and distribute them to an account.
 - burn: Allows users to burn their own tokens.
-- redeemGame: Allows users to redeem tokens for games.
-- buyGame: Allows users to buy games using their tokens.
-- isGameAvailable: Checks if a specific game is available for redemption or purchase.
+- redeemBundleDiamond: Allows users to redeem BundleDiamonds using their tokens.
+- buyBundleDiamond: Allows users to buy BundleDiamonds using their tokens.
+- isBundleDiamondAvailable: Checks if a specific BundleDiamond is available for redemption or purchase.
 
 # Usage in Remix IDE
 
@@ -49,14 +49,14 @@ Mints new tokens and assigns them to a specified account. Only the owner can cal
 - burn: function burn(uint256 amount) public;
 Burns a specified number of tokens from the caller's account, reducing the total supply.
 
-- redeemGame: function redeemGame(uint256 gameId) public;
-Allows users to redeem a game using their tokens. Mints tokens equivalent to the game's price and marks the game as redeemed.
+- redeemBundleDiamond: function redeemBundleDiamond(uint256 bundleDiamondId) public;
+Allows users to redeem a BundleDiamond using their tokens. Mints tokens equivalent to the BundleDiamond's price and marks the BundleDiamond as redeemed.
 
-- buyGame: function buyGame(uint256 gameId) public;
-Allows users to buy a game using their tokens. Transfers tokens equivalent to the game's price and marks the game as unavailable.
+- buyBundleDiamond: function buyBundleDiamond(uint256 bundleDiamondId) public;
+Allows users to buy a BundleDiamond using their tokens. Transfers tokens equivalent to the BundleDiamond's price and marks the BundleDiamond as unavailable.
 
-- isGameAvailable: function isGameAvailable(uint256 gameId) public view returns (bool);
-Checks if a specific game is available for redemption or purchase.
+- isBundleDiamondAvailable: function isBundleDiamondAvailable(uint256 bundleDiamondId) public view returns (bool);
+Checks if a specific BundleDiamond is available for redemption or purchase.
 
 # Owner
 Ralph Lauren Bensurto
