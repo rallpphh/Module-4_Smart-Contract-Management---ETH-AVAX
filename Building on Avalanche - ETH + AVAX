@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MyToken is IERC20, Ownable {
+contract DegenGamingToken is IERC20, Ownable {
     using SafeMath for uint256;
 
     string public name;
@@ -16,18 +16,19 @@ contract MyToken is IERC20, Ownable {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    // Redeemable items
-    struct Item {
+    // Redeemable games
+    struct Game {
         string name;
         uint256 price;
         bool available;
     }
 
-    Item[] public items;
-    mapping(address => mapping(uint256 => bool)) public redeemedItems;
+    Game[] public games;
+    mapping(address => mapping(uint256 => bool)) public redeemedGames;
 
-    event ItemRedeemed(address indexed player, uint256 indexed itemId, string itemName);
-    event ItemBought(address indexed player, uint256 indexed itemId, string itemName);
+    event GameRedeemed(address indexed player, uint256 indexed gameId, string gameName);
+    event GameBought(address indexed player, uint256 indexed gameId, string gameName);
+    event GameUnitRedeemed(address indexed player, uint256 indexed gameUnitId);
 
     constructor(string memory _name, string memory _symbol, uint8 _decimals, uint256 initialSupply, address initialOwner) Ownable(initialOwner) {
         name = _name;
@@ -37,10 +38,10 @@ contract MyToken is IERC20, Ownable {
         _balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);
 
-        // Initialize predefined items
-        items.push(Item({ name: "Kyrie 1 Anta", price: 9000, available: true }));
-        items.push(Item({ name: "Kobe 2", price: 6000, available: true }));
-        items.push(Item({ name: "Jordan 1", price: 4000, available: true }));
+        // Initialize predefined games
+        games.push(Game({ name: "Sword of Valor", price: 9000, available: true }));
+        games.push(Game({ name: "Shield of Courage", price: 6000, available: true }));
+        games.push(Game({ name: "Potion of Strength", price: 4000, available: true }));
     }
 
     function totalSupply() public view override returns (uint256) {
@@ -113,44 +114,43 @@ contract MyToken is IERC20, Ownable {
         emit Transfer(account, address(0), amount);
     }
 
-    // Redeem an item
-    function redeemItem(uint256 itemId) public {
-        require(itemId < items.length, "Item does not exist");
-        Item storage item = items[itemId];
-        require(item.available, "Item is not available");
-        require(!redeemedItems[msg.sender][itemId], "Item already redeemed");
+    // Redeem a game
+    function redeemGame(uint256 gameId) public {
+        require(gameId < games.length, "Game does not exist");
+        Game storage game = games[gameId];
+        require(game.available, "Game is not available");
+        require(!redeemedGames[msg.sender][gameId], "Game already redeemed");
 
-        uint256 price = item.price;
-        require(_balances[msg.sender] >= price, "Insufficient balance to redeem item");
+        uint256 price = game.price;
 
-        // Increase the total supply and transfer tokens to the player
+        // Increase the total supply and add tokens to the player's balance
         _mint(msg.sender, price);
 
-        // Mark the item as redeemed
-        redeemedItems[msg.sender][itemId] = true;
+        // Mark the game as redeemed
+        redeemedGames[msg.sender][gameId] = true;
 
-        emit ItemRedeemed(msg.sender, itemId, item.name);
+        emit GameRedeemed(msg.sender, gameId, game.name);
     }
 
-    // Buy an item
-    function buyItem(uint256 itemId) public {
-        require(itemId < items.length, "Item does not exist");
-        Item storage item = items[itemId];
-        require(item.available, "Item is not available");
-        require(_balances[msg.sender] >= item.price, "Insufficient balance to buy item");
+    // Buy a game
+    function buyGame(uint256 gameId) public {
+        require(gameId < games.length, "Game does not exist");
+        Game storage game = games[gameId];
+        require(game.available, "Game is not available");
+        require(_balances[msg.sender] >= game.price, "Insufficient balance to buy game");
 
-        // Transfer the tokens and mark the item as unavailable
-        _balances[msg.sender] = _balances[msg.sender].sub(item.price, "ERC20: buy amount exceeds balance");
-        _totalSupply = _totalSupply.sub(item.price);
-        item.available = false;
+        // Transfer the tokens and mark the game as unavailable
+        _balances[msg.sender] = _balances[msg.sender].sub(game.price, "ERC20: buy amount exceeds balance");
+        _totalSupply = _totalSupply.sub(game.price);
+        game.available = false;
 
-        emit ItemBought(msg.sender, itemId, item.name);
+        emit GameBought(msg.sender, gameId, game.name);
     }
 
-    // Check if an item is available
-    function isItemAvailable(uint256 itemId) public view returns (bool) {
-        if (itemId < items.length) {
-            return items[itemId].available;
+    // Check if a game is available
+    function isGameAvailable(uint256 gameId) public view returns (bool) {
+        if (gameId < games.length) {
+            return games[gameId].available;
         }
         return false;
     }
