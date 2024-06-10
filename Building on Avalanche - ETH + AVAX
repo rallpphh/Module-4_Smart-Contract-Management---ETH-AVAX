@@ -16,32 +16,38 @@ contract RalphGamingToken is IERC20, Ownable {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    // Redeemable games
-    struct Game {
+    // Redeemable BundleDiamonds
+    struct BundleDiamond {
         string name;
         uint256 price;
         bool available;
     }
 
-    Game[] public games;
-    mapping(address => mapping(uint256 => bool)) public redeemedGames;
+    BundleDiamond[] public bundleDiamonds;
+    mapping(address => mapping(uint256 => bool)) public redeemedBundleDiamond;
 
-    event GameRedeemed(address indexed player, uint256 indexed gameId, string gameName);
-    event GameBought(address indexed player, uint256 indexed gameId, string gameName);
-    event GameUnitRedeemed(address indexed player, uint256 indexed gameUnitId);
+    event BundleDiamondRedeemed(address indexed player, uint256 indexed bundleDiamondId, string bundleDiamondName);
+    event BundleDiamondBought(address indexed player, uint256 indexed bundleDiamondId, string bundleDiamondName);
+    event BundleDiamondUnitRedeemed(address indexed player, uint256 indexed bundleDiamondUnitId);
 
-    constructor(string memory _name, string memory _symbol, uint8 _decimals, uint256 initialSupply, address initialOwner) Ownable(initialOwner) {
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        uint8 _decimals,
+        uint256 initialSupply,
+        address initialOwner
+    ) Ownable(initialOwner) {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
-        _totalSupply = initialSupply * 10 ** uint256(_decimals);
+        _totalSupply = initialSupply * 10**uint256(_decimals);
         _balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);
 
-        // Initialize predefined games
-        games.push(Game({ name: "Sword of Valor", price: 9000, available: true }));
-        games.push(Game({ name: "Shield of Courage", price: 6000, available: true }));
-        games.push(Game({ name: "Potion of Strength", price: 4000, available: true }));
+        // Initialize predefined BundleDiamonds
+        bundleDiamonds.push(BundleDiamond({ name: "Sword of Valor", price: 9000, available: true }));
+        bundleDiamonds.push(BundleDiamond({ name: "Shield of Courage", price: 6000, available: true }));
+        bundleDiamonds.push(BundleDiamond({ name: "Potion of Strength", price: 4000, available: true }));
     }
 
     function totalSupply() public view override returns (uint256) {
@@ -68,7 +74,11 @@ contract RalphGamingToken is IERC20, Ownable {
 
     function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
         _transfer(sender, recipient, amount);
-        _approve(sender, msg.sender, _allowances[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
+        _approve(
+            sender,
+            msg.sender,
+            _allowances[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance")
+        );
         return true;
     }
 
@@ -114,43 +124,43 @@ contract RalphGamingToken is IERC20, Ownable {
         emit Transfer(account, address(0), amount);
     }
 
-    // Redeem a game
-    function redeemGame(uint256 gameId) public {
-        require(gameId < games.length, "Game does not exist");
-        Game storage game = games[gameId];
-        require(game.available, "Game is not available");
-        require(!redeemedGames[msg.sender][gameId], "Game already redeemed");
+    // Redeem a BundleDiamond
+    function redeemBundleDiamond(uint256 bundleDiamondId) public {
+        require(bundleDiamondId < bundleDiamonds.length, "BundleDiamond does not exist");
+        BundleDiamond storage bundleDiamond = bundleDiamonds[bundleDiamondId];
+        require(bundleDiamond.available, "BundleDiamond is not available");
+        require(!redeemedBundleDiamond[msg.sender][bundleDiamondId], "BundleDiamond already redeemed");
 
-        uint256 price = game.price;
+        uint256 price = bundleDiamond.price;
 
         // Increase the total supply and add tokens to the player's balance
         _mint(msg.sender, price);
 
-        // Mark the game as redeemed
-        redeemedGames[msg.sender][gameId] = true;
+        // Mark the BundleDiamond as redeemed
+        redeemedBundleDiamond[msg.sender][bundleDiamondId] = true;
 
-        emit GameRedeemed(msg.sender, gameId, game.name);
+        emit BundleDiamondRedeemed(msg.sender, bundleDiamondId, bundleDiamond.name);
     }
 
-    // Buy a game
-    function buyGame(uint256 gameId) public {
-        require(gameId < games.length, "Game does not exist");
-        Game storage game = games[gameId];
-        require(game.available, "Game is not available");
-        require(_balances[msg.sender] >= game.price, "Insufficient balance to buy game");
+    // Buy a BundleDiamond
+    function buyBundleDiamond(uint256 bundleDiamondId) public {
+        require(bundleDiamondId < bundleDiamonds.length, "BundleDiamond does not exist");
+        BundleDiamond storage bundleDiamond = bundleDiamonds[bundleDiamondId];
+        require(bundleDiamond.available, "BundleDiamond is not available");
+        require(_balances[msg.sender] >= bundleDiamond.price, "Insufficient balance to buy BundleDiamond");
 
-        // Transfer the tokens and mark the game as unavailable
-        _balances[msg.sender] = _balances[msg.sender].sub(game.price, "ERC20: buy amount exceeds balance");
-        _totalSupply = _totalSupply.sub(game.price);
-        game.available = false;
+        // Transfer the tokens and mark the BundleDiamond as unavailable
+        _balances[msg.sender] = _balances[msg.sender].sub(bundleDiamond.price, "ERC20: buy amount exceeds balance");
+        _totalSupply = _totalSupply.sub(bundleDiamond.price);
+        bundleDiamond.available = false;
 
-        emit GameBought(msg.sender, gameId, game.name);
+        emit BundleDiamondBought(msg.sender, bundleDiamondId, bundleDiamond.name);
     }
 
-    // Check if a game is available
-    function isGameAvailable(uint256 gameId) public view returns (bool) {
-        if (gameId < games.length) {
-            return games[gameId].available;
+    // Check if a BundleDiamond is available
+    function isBundleDiamondAvailable(uint256 bundleDiamondId) public view returns (bool) {
+        if (bundleDiamondId < bundleDiamonds.length) {
+            return bundleDiamonds[bundleDiamondId].available;
         }
         return false;
     }
